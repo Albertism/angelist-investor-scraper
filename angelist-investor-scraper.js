@@ -13,15 +13,10 @@ function newWindow() {
   win.focus();
   win.addEventListener('load', function() {
   	win.grabLinkedInUrl = grabLinkedInUrl;
-  	setTimeout(win.grabLinkedInUrl(win.document.body), 5000);
+  	win.grabLinkedInUrl(win.document.body);
+  	console.log(localStorage.getItem("linkedInUrl"));
+  	win.close();
   }, true);
-
-  // win.onload = function(){
-  // 	setTimeOut(win.window.grabLinkedInUrl(), 10000);
-  // };
-  // $(win).on("load", setTimeout(grabLinkedInUrl(), 10000));
-  // script.src = 'js/myScript.js';
-  // win.document.head.appendChild(script);
 }
 
 function grabLinkedInUrl(winRef) {
@@ -32,6 +27,21 @@ function grabLinkedInUrl(winRef) {
 	}
 
 	linkedInUrl = linkedInUrl ? linkedInUrl : 'Not Found';
-	console.log(linkedInUrl);
-	alert('what');
+	localStorage.setItem("linkedInUrl", linkedInUrl);
+	window.close();
+}
+
+function loadMoreConnection(totalConnection) {
+	
+}
+
+function scrollTillBottom(connectionNumber) {
+	let currentLength = $('.item');
+	while (currentLength <= connectionNumber) {
+		setTimeout(() => {
+			window.scrollTo(0, document.body.scrollHeight);
+			console.log('Scrolling....');
+			currentLength = $('.item').length;
+		}, 2000);
+	}
 }
