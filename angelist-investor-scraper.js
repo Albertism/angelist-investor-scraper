@@ -31,17 +31,26 @@ function grabLinkedInUrl(winRef) {
 	window.close();
 }
 
-function loadMoreConnection(totalConnection) {
-	
+function loadMoreProspects() {
+	window.scrollTo(0, document.body.scrollHeight);
+		setTimeout(() => {
+			console.log('Scrolling to bottom....');
+		}, 2000);
 }
 
-function scrollTillBottom(connectionNumber) {
-	let currentLength = $('.item');
-	while (currentLength <= connectionNumber) {
+function scrapeConnections(connectionNumber) {
+	console.log('Collecting ', connectionNumber, ' investors...');
+	let currentLength = $('.item').length;
+
+	if (currentLength < connectionNumber) {
+		console.log('Current prospects: ', currentLength, '/', connectionNumber);
+		loadMoreProspects();
 		setTimeout(() => {
-			window.scrollTo(0, document.body.scrollHeight);
-			console.log('Scrolling....');
-			currentLength = $('.item').length;
+			scrapeConnections(connectionNumber);
 		}, 2000);
+		return;
 	}
+
+	console.log('Prospects loaded, starting to scrape');
+	let csvString = '';
 }
