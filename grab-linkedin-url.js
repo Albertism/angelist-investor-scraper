@@ -45,8 +45,10 @@ function collectLinkedInUrlFromNewWindow(url) {
   }
   var win = window.open(url);
   win.grabLinkedInUrl = grabLinkedInUrl;
+  win.injectJQuery = injectJQuery;
 
   win.window.onload = () => {
+  	win.injectJQuery();
   	win.grabLinkedInUrl(win.document.body);
   	win.window.close();
   }
@@ -77,4 +79,17 @@ function grabLinkedInUrl(winRef) {
 
 function timeout(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function injectJQuery() {
+    (function l(u, i) {
+        var d = document;
+        if (!d.getElementById(i)) {
+            var s = d.createElement('script');
+            s.src = u;
+            s.id = i;
+            d.body.appendChild(s);
+        }
+    }
+    ('//code.jquery.com/jquery-3.2.1.min.js', 'jquery'))
 }
