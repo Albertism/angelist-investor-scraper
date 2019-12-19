@@ -27,35 +27,40 @@ function createContactObject(inputArray) {
 
 async function updateObjectArrayWithLinkedInUrl(inputString) {
 	parseStringToObject(inputString); // string to object list;
-	let experimentList = contactObjectArray.slice(0, 15);
+	let experimentList = contactObjectArray.slice(0, 5);
 	console.log('testing on size: ', experimentList.length);
 
-	for (contactObj of experimentList) {
-		await timeout(100);
-		collectLinkedInUrlFromNewWindow(contactObj.profileLink);
+	for (contactObj of contactObjectArray) {
+		// await timeout(100);
+		await collectLinkedInUrlFromNewWindow(contactObj.profileLink);
 	}
 
 	console.log('operation complete')
 }
 
 function collectLinkedInUrlFromNewWindow(url) {
-  if (url === null || url === undefined) {
-  	console.error('No URL passed for linkedinUrl scraping!');
-  	return;
-  }
-  var win = window.open(url);
-  win.grabLinkedInUrl = grabLinkedInUrl;
-  win.injectJQuery = injectJQuery;
+  return new Promise((resolve, reject) => {
+	  if (url === null || url === undefined) {
+	  	console.error('No URL passed for linkedinUrl scraping!');
+	  	return;
+	  }
+	  var win = window.open(url);
+	  win.grabLinkedInUrl = grabLinkedInUrl;
+	  win.injectJQuery = injectJQuery;
 
-  win.window.onload = () => {
-  	win.injectJQuery();
-  	win.grabLinkedInUrl(win.document.body);
-  	win.window.close();
-  }
+	  win.window.onload = () => {
+	  	timeout(100).then(() => {
+	  		win.injectJQuery();
+	  		win.grabLinkedInUrl(win.document.body, url);
+	  		win.window.close();
+	  		resolve();
+	  	});
+	  }
+  });
 }
 
 
-function grabLinkedInUrl(winRef) {
+function grabLinkedInUrl(winRef, currentUrl) {
 	if (winRef === null || winRef === undefined) {
 		console.error('No window reference passed for linkedInUrl scraping!');
 		return;
@@ -68,7 +73,7 @@ function grabLinkedInUrl(winRef) {
 
 	linkedInUrl = linkedInUrl ? linkedInUrl : 'Not Found';
 	let linkedInContactObject = new Object();
-	linkedInContactObject.profileLink = window.location.href;
+	linkedInContactObject.profileLink = currentUrl;
 	linkedInContactObject.linkedInUrl = linkedInUrl;
 
 	let linkedInObjectArray = JSON.parse(localStorage.getItem("linkedinUrlObjects") || "[]");
@@ -92,4 +97,20 @@ function injectJQuery() {
         }
     }
     ('//code.jquery.com/jquery-3.2.1.min.js', 'jquery'))
+}
+
+// manual operations
+
+function launchManualUpdate(profileLinkObjectArray) {
+	for (item of profileLinkObjectArray) {
+
+	}
+}
+
+function findMatchingProfileLink(profileObject) {
+	for (contactObject of contactObjectArray) {
+		if (profileObject.profileLink) {
+
+		}
+	}
 }
