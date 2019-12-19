@@ -1,4 +1,6 @@
 var contactObjectArray = [];
+var successfulUpdate = 0;
+var failedUpdate = 0;
 function parseStringToObject(inputString) {
 	let lineArray = inputString.split("\r\n");
 	for (item of lineArray) {
@@ -103,14 +105,32 @@ function injectJQuery() {
 
 function launchManualUpdate(profileLinkObjectArray) {
 	for (item of profileLinkObjectArray) {
-
+		findAndUpdateMatchingProfileLink(item);
 	}
+
+	console.log('Operation finished with ', successfulUpdate, ' success, ', failedUpdate, ' failed');
 }
 
-function findMatchingProfileLink(profileObject) {
-	for (contactObject of contactObjectArray) {
-		if (profileObject.profileLink) {
-
+function findAndUpdateMatchingProfileLink(profileObject) {
+	for (let i =0; i < contactObjectArray.length; i++) {
+		let contactObject = contactObjectArray[i];
+		if (profileObject == 'Not Found' || profileObject.profileLink == contactObject.profileLink) {
+			contactObject.linkedInUrl = profileObject.linkedInUrl;
+			successfulUpdate++;
+			return;
 		}
 	}
+	console.error('something wrong? cannot find matching one for', profileObject);
+	failedUpdate++;
+}
+var finalString = '';
+function parseObjectToCSVString() {
+	for(item of contactObjectArray) {
+		finalString += item.firstName + ';';
+		finalString += item.lastName + ';';
+		finalString += item.profileLink  + ';';
+		finalString += item.location + ';';
+		finalString += item.linkedInUrl + '\r\n';
+	}
+	console.log ('complete');
 }
