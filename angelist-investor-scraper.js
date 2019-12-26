@@ -130,3 +130,4 @@ async function scrapeConnections(connectionNumber, locationName) {
 	console.log('Successfully parsed all ' + connectionNumber +' candidates, check local storage');
 	connectionSessionLock = false;
 }
+
